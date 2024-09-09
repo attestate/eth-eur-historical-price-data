@@ -1,12 +1,9 @@
 import fetch from "node-fetch";
 import fs from "fs";
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
 
 const fetchData = async () => {
-  const date = formatISO(new Date(), { representation: "date" }).replace(
-    /-/g,
-    "/"
-  );
+  const date = format(new Date(), "MM/dd/yyyy");
   const url = `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur`;
   const response = await fetch(url);
   const data = await response.json();
@@ -15,11 +12,11 @@ const fetchData = async () => {
 };
 
 const prependDataToFile = async (newData) => {
-  const existingData = fs.readFileSync("data.csv", "utf8");
-  const updatedData = `Date,Open\n${newData}\n${existingData
-    .split("\n")
-    .slice(1)
-    .join("\n")}`;
+  let existingData = fs.readFileSync("data.csv", "utf8");
+  existingData = existingData.replace(/\r\n/g, "\n"); // Convert CRLF to LF
+  const lines = existingData.split("\n");
+  lines[1] = lines[1].replace(/-/g, "/"); // Ensure second line matches new date format
+  const updatedData = `Date,Open\n${newData}\n${lines.slice(1).join("\n")}`;
   fs.writeFileSync("data.csv", updatedData, "utf8");
 };
 
