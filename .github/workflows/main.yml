@@ -22,7 +22,7 @@
        run: npm install
 
      - name: Update data.csv with latest ETH to EUR price
-       run: node updateData.js
+       run: node job.mjs
 
      - name: Commit and push if there are changes
        run: |
