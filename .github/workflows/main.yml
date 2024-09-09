@@ -12,6 +12,9 @@
      steps:
      - name: Checkout repository
        uses: actions/checkout@v2
+       with:
+        persist-credentials: false
+        token: ${{ secrets.PAT }}
 
      - name: Set up Node.js
        uses: actions/setup-node@v2
